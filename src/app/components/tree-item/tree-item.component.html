@@ -1,0 +1,61 @@
+<div class="tree-item" [style.padding-left.px]="paddingLeft()">
+      @if (isLoading()) {
+        <mat-progress-bar 
+          mode="indeterminate" 
+          style="position: absolute; top: 0; left: 0; right: 0; height: 2px;">
+        </mat-progress-bar>
+      }
+      
+      <div class="item-content" (click)="onRowClick($event)">
+        <!-- Caret Icon -->
+        <button 
+          mat-icon-button 
+          class="caret-button"
+          [style.opacity]="hasChildren() ? 1 : 0"
+          (click)="onExpandClick($event)">
+          <mat-icon>{{ isExpanded() ? 'expand_more' : 'chevron_right' }}</mat-icon>
+        </button>
+
+        <!-- Checkbox -->
+        <mat-checkbox 
+          [checked]="isSelected()"
+          (change)="onCheckboxChange($event)"
+          (click)="$event.stopPropagation()">
+        </mat-checkbox>
+
+        <!-- Dynamic Icon -->
+        <mat-icon class="node-icon">{{ getNodeIcon() }}</mat-icon>
+
+        <!-- Name -->
+        <span class="node-name">{{ getNodeLabel() }}</span>
+
+        <!-- Spacer -->
+        <div class="spacer"></div>
+
+        <!-- Three-dot Menu -->
+        <button 
+          mat-icon-button 
+          class="menu-button"
+          [matMenuTriggerFor]="menu"
+          (click)="$event.stopPropagation()"
+          [style.opacity]="0"
+          #menuTrigger>
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="onMenuItemClick('rename')">
+        <mat-icon>edit</mat-icon>
+        <span>Rename</span>
+      </button>
+      <button mat-menu-item (click)="onMenuItemClick('delete')">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+      <button mat-menu-item (click)="onMenuItemClick('properties')">
+        <mat-icon>info</mat-icon>
+        <span>Properties</span>
+      </button>
+    </mat-menu>

@@ -1,0 +1,43 @@
+<mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>storage</mat-icon>
+          Vaults
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <table mat-table [dataSource]="vaults()" class="mat-elevation-2">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let vault">{{ vault.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="people">
+            <th mat-header-cell *matHeaderCellDef>People</th>
+            <td mat-cell *matCellDef="let vault">{{ vault.peopleCount }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="sections">
+            <th mat-header-cell *matHeaderCellDef>Sections</th>
+            <td mat-cell *matCellDef="let vault">{{ vault.sectionsCount }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let vault">
+              <button 
+                mat-raised-button 
+                color="primary"
+                (click)="browseVault(vault.id)">
+                <mat-icon>folder_open</mat-icon>
+                Browse
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>

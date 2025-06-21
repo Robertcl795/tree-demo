@@ -1,0 +1,26 @@
+<mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <button mat-icon-button (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          {{ vaultName() }}
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        @if (isLoading()) {
+          <mat-progress-bar mode="indeterminate" style="margin-bottom: 16px;"></mat-progress-bar>
+        }
+        
+        @if (rootData().length > 0) {
+          <app-tree-explorer
+            [rootData]="rootData()"
+            [config]="explorerConfig"
+            [globalLoading]="isLoading()"
+            (expand)="onNodeExpand($event)"
+            (menuAction)="onMenuAction($event)"
+          ></app-tree-explorer>
+        }
+      </mat-card-content>
+    </mat-card>
