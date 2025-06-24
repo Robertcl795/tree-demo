@@ -1,10 +1,14 @@
 import { Component, input, output, computed } from '@angular/core';
-import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  MatCheckboxChange,
+  MatCheckboxModule,
+} from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TreeNode, TreeConfig, MenuAction } from '../../models/vault.model';
+import { TreeNode, TreeConfig, MenuAction, NodeType, SelectionState } from '../../models/vault.model';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-tree-item',
@@ -14,17 +18,18 @@ import { TreeNode, TreeConfig, MenuAction } from '../../models/vault.model';
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTooltipModule
   ],
   templateUrl: './tree-item.component.html',
-  styleUrl: './tree-item.component.scss'
+  styleUrl: './tree-item.component.scss',
 })
 export class TreeItemComponent {
   // Inputs
   node = input.required<TreeNode>();
   depth = input.required<number>();
   isExpanded = input<boolean>(false);
-  isSelected = input<boolean>(false);
+  selectionState = input<SelectionState>(SelectionState.UNSELECTED);
   isLoading = input<boolean>(false);
   config = input.required<TreeConfig>();
 
@@ -39,6 +44,10 @@ export class TreeItemComponent {
   hasChildren = computed(() => 
     this.node().children && this.node().children!.length > 0
   );
+  
+  isSelected = computed(() => this.selectionState() === SelectionState.SELECTED);
+  
+  isIndeterminate = computed(() => this.selectionState() === SelectionState.PARTIAL);
 
   getNodeLabel(): string {
     const labelProp = this.config().labelProperty;
@@ -47,15 +56,56 @@ export class TreeItemComponent {
 
   getNodeIcon(): string {
     const iconProp = this.config().iconProperty;
-    const iconType = (this.node() as any)[iconProp];
+    const iconType = (this.node() as any)[iconProp] as NodeType;
     
     switch (iconType) {
-      case 'folder': return 'folder';
-      case 'file': return 'description';
-      case 'document': return 'article';
-      case 'image': return 'image';
+      case NodeType.FOLDER: return 'folder';
+      case NodeType.FILE: return 'description';
+      case NodeType.DOCUMENT: return 'article';
+      case NodeType.IMAGE: return 'image';
+      case NodeType.CONFIG: return 'settings';
+      case NodeType.EXECUTABLE: return 'launch';
+      case NodeType.ARCHIVE: return 'archive';
+      case NodeType.VIDEO: return 'video_file';
+      case NodeType.AUDIO: return 'audio_file';
       default: return 'description';
     }
+  }
+
+  isCheckboxDisabled(): boolean {
+    const nodeType = this.node().type;
+    const config = this.config();
+    
+    // If selectableTypes is defined, only those types are enabled
+    if (config.selectableTypes && config.selectableTypes.length > 0) {
+      return !config.selectableTypes.includes(nodeType);
+    }
+    
+    // If disabledTypes is defined, those types are disabled
+    if (config.disabledTypes && config.disabledTypes.length > 0) {
+      return config.disabledTypes.some(disabled => disabled.type === nodeType);
+    }
+    
+    // Default: all types are selectable
+    return false;
+  }
+
+  getDisabledTooltip(): string {
+    if (!this.isCheckboxDisabled()) {
+      return '';
+    }
+    
+    const nodeType = this.node().type;
+    const config = this.config();
+    
+    // Find the specific disabled type configuration
+    const disabledConfig = config.disabledTypes?.find(disabled => disabled.type === nodeType);
+    if (disabledConfig) {
+      return disabledConfig.reason;
+    }
+    
+    // Fallback message if using selectableTypes approach
+    return `${nodeType} files cannot be selected`;
   }
 
   onRowClick(event: Event) {
@@ -71,8 +121,11 @@ export class TreeItemComponent {
     }
   }
 
-  onCheckboxChange(_event: MatCheckboxChange) {
-    this.toggleSelection.emit();
+  onCheckboxChange(event: MatCheckboxChange) {
+    // Only process if checkbox is not disabled
+    if (!this.isCheckboxDisabled()) {
+      this.toggleSelection.emit();
+    }
   }
 
   onCheckboxClick(event: Event) {

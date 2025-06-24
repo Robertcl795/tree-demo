@@ -11,6 +11,10 @@ export const routes: Routes = [
     loadComponent: () => import('./vault-view/vault-view.component').then(m => m.VaultViewComponent)
   },
   {
+    path: 'test',
+    loadComponent: () => import('./tree-test/tree-test.component').then(m => m.TreeTestComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

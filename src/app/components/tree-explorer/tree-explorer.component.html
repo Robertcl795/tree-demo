@@ -1,21 +1,24 @@
 @if (globalLoading()) {
-      <div style="margin-bottom: 16px;">
-        <mat-progress-bar mode="indeterminate" [style.opacity]="0.7"></mat-progress-bar>
-      </div>
-    }
-    
-    <div class="tree-container">
-      @for (flatNode of flattenedNodes(); track flatNode.id) {
-        <app-tree-item
-          [node]="flatNode"
-          [depth]="flatNode.depth"
-          [isExpanded]="isNodeExpanded(flatNode.id)"
-          [isSelected]="isNodeSelected(flatNode.id)"
-          [isLoading]="isNodeLoading(flatNode.id)"
-          [config]="config()"
-          (expand)="onNodeExpand(flatNode)"
-          (toggleSelection)="onToggleSelection(flatNode.id)"
-          (menuAction)="onMenuAction($event)"
-        ></app-tree-item>
-      }
-    </div>
+<div style="margin-bottom: 16px">
+  <mat-progress-bar
+    mode="indeterminate"
+    [style.opacity]="0.7"
+  ></mat-progress-bar>
+</div>
+}
+
+<div class="tree-container">
+  @for (flatNode of flattenedNodes(); track flatNode.id) {
+  <app-tree-item
+    [node]="flatNode"
+    [depth]="flatNode.depth"
+    [isExpanded]="isNodeExpanded(flatNode.id)"
+    [selectionState]="getNodeSelectionState(flatNode.id)"
+    [isLoading]="isNodeLoading(flatNode.id)"
+    [config]="config()"
+    (expand)="onNodeExpand(flatNode)"
+    (toggleSelection)="onToggleSelection(flatNode.id)"
+    (menuAction)="onMenuAction($event)"
+  ></app-tree-item>
+  }
+</div>

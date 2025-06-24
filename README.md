@@ -1,6 +1,92 @@
-# TreeDemo
+# Tree Explorer Component Demo
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.2.
+
+## Tree Explorer Component
+
+This project showcases an advanced Tree Explorer component built with Angular 20 and Angular Material that provides sophisticated selection capabilities:
+
+- **Three Selection States**: Selected, Unselected, and Partial selection
+- **Parent-Child Selection Synchronization**: Selection propagates between parents and children
+- **Preloaded Selection**: Support for loading the tree with selections already present
+- **Context Menu Actions**: Customizable actions for tree nodes
+- **Type-Specific Icons**: Different icons based on node types
+- **Configurable Selection Rules**: Define which node types can be selected
+
+### Demo Pages
+
+- `/test` - Interactive testing harness with configurable tree structures
+- `/vault/:id` - Real-world implementation in a vault viewing context
+
+### Documentation
+
+For comprehensive information, see:
+
+- [Full Component Documentation](/docs/tree-components.md)
+- [Presentation Slides](/docs/tree-component-slides.md)
+- [Testing Guide](/docs/tree-testing-guide.md)
+
+## Project Structure
+
+```
+tree-demo/
+├── src/
+│   ├── app/
+│   │   ├── components/
+│   │   │   ├── tree-explorer/         # Container component
+│   │   │   └── tree-item/             # Individual node component
+│   │   ├── models/
+│   │   │   └── vault.model.ts         # Data models for the tree
+│   │   ├── services/
+│   │   │   └── vault.service.ts       # Demo data service
+│   │   └── tree-test/                 # Test harness component
+│   └── ...
+└── docs/                             # Documentation
+    ├── tree-components.md            # Comprehensive documentation
+    ├── tree-component-slides.md      # Presentation-friendly docs
+    └── tree-testing-guide.md         # Testing procedures
+```
+
+## Core Models
+
+### TreeNode
+
+```typescript
+export interface TreeNode {
+  id: string;
+  name: string;
+  type: NodeType;
+  children?: TreeNode[];
+  parentId?: string;
+  selectionState?: SelectionState;
+}
+```
+
+### TreeConfig
+
+```typescript
+export interface TreeConfig {
+  childrenProperty: string;
+  labelProperty: string;
+  iconProperty: string;
+  selectableTypes?: NodeType[];
+  disabledTypes?: {
+    type: NodeType;
+    reason: string;
+  }[];
+  preselectedNodes?: string[];
+}
+```
+
+### SelectionState
+
+```typescript
+export enum SelectionState {
+  UNSELECTED = 'unselected',
+  SELECTED = 'selected',
+  PARTIAL = 'partial'
+}
+```
 
 ## Development server
 

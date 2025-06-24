@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { VaultService } from '../services/vault.service';
-import { TreeNode, TreeConfig } from '../models/vault.model';
+import { TreeNode, TreeConfig, NodeType } from '../models/vault.model';
 import { TreeExplorerComponent } from '../components/tree-explorer/tree-explorer.component';
 
 @Component({
@@ -21,7 +21,7 @@ import { TreeExplorerComponent } from '../components/tree-explorer/tree-explorer
   styleUrl: './vault-view.component.scss'
 })
 export class VaultViewComponent implements OnInit{
-private route = inject(ActivatedRoute);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private vaultService = inject(VaultService);
 
@@ -37,7 +37,30 @@ private route = inject(ActivatedRoute);
   explorerConfig: TreeConfig = {
     childrenProperty: 'children',
     labelProperty: 'name',
-    iconProperty: 'type'
+    iconProperty: 'type',
+    selectableTypes: [NodeType.FOLDER, NodeType.FILE, NodeType.DOCUMENT, NodeType.ARCHIVE],
+    disabledTypes: [
+      {
+        type: NodeType.IMAGE,
+        reason: 'Image files cannot be selected for bulk operations'
+      },
+      {
+        type: NodeType.CONFIG,
+        reason: 'Configuration files are protected from modification'
+      },
+      {
+        type: NodeType.EXECUTABLE,
+        reason: 'Executable files cannot be selected for security reasons'
+      },
+      {
+        type: NodeType.VIDEO,
+        reason: 'Video files are too large for bulk operations'
+      },
+      {
+        type: NodeType.AUDIO,
+        reason: 'Audio files are managed separately'
+      }
+    ]
   };
 
   async ngOnInit() {
@@ -51,8 +74,8 @@ private route = inject(ActivatedRoute);
   private async loadVaultData() {
     this.isLoading.set(true);
     try {
-      const data = await this.vaultService.loadVaultData(this.vaultId());
-      this.rootData.set(data);
+      const response = await this.vaultService.loadVaultData(this.vaultId());
+      this.rootData.set(response.nodes);
     } finally {
       this.isLoading.set(false);
     }
