@@ -4,7 +4,41 @@
 
 The Tree Explorer is a powerful, reusable Angular 20 component for displaying and interacting with hierarchical data. It provides advanced features like partial selection states, preselected nodes, and contextual actions through an intuitive interface built with Angular Material.
 
-![Tree Component Visualization](https://via.placeholder.com/800x400?text=Tree+Explorer+Component)
+```
+┌─────────────────────── Tree Explorer Component ───────────────────────┐
+│                                                                       │
+│  ┌─[✓] Documents                                          ⋮ (menu)    │
+│  │  │                                                                 │
+│  │  ├─[✓] Reports                                         ⋮          │
+│  │  │  ├─[✓] Q1_report.pdf                                ⋮          │
+│  │  │  ├─[✓] Q2_report.pdf                                ⋮          │
+│  │  │  └─[✓] Annual_summary.pdf                           ⋮          │
+│  │  │                                                                 │
+│  │  └─[✓] Contracts                                       ⋮          │
+│  │     ├─[✓] contract_2025.pdf                            ⋮          │
+│  │     └─[✓] agreement.docx                               ⋮          │
+│  │                                                                    │
+│  ├─[▤] Media                                              ⋮          │
+│  │  │                                                                 │
+│  │  ├─[✓] Images                                          ⋮          │
+│  │  │  ├─[✓] logo.png                                     ⋮          │
+│  │  │  └─[✓] banner.jpg                                   ⋮          │
+│  │  │                                                                 │
+│  │  └─[ ] Videos                                          ⋮          │
+│  │     ├─[ ] presentation.mp4                             ⋮          │
+│  │     └─[ ] tutorial.mp4                                 ⋮          │
+│  │                                                                    │
+│  └─[ ] Config                                             ⋮          │
+│     └─[ ] settings.json                                   ⋮          │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+Legend:
+[✓] Fully selected node
+[▤] Partially selected node (some children selected)
+[ ] Unselected node
+⋮  Context menu trigger
+```
 
 ## Key Features
 
@@ -20,6 +54,38 @@ The Tree Explorer is a powerful, reusable Angular 20 component for displaying an
 - **Selectable Types Configuration**: Control which node types can be selected
 
 ## Component Architecture
+
+```
+┌─ Component Architecture ────────────────────────────────────────────┐
+│                                                                     │
+│  TreeExplorerComponent (Container)                                  │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │                                                             │    │
+│  │  ┌─ TreeItemComponent (Node) ─┐  ┌─ TreeItemComponent ─┐   │    │
+│  │  │                            │  │                      │   │    │
+│  │  │ ├─[✓] Documents       ⋮   │  │ ├─[ ] Config     ⋮   │   │    │
+│  │  └────────────────────────────┘  └──────────────────────┘   │    │
+│  │                                                             │    │
+│  │  ┌─ TreeItemComponent ─┐  ┌─ TreeItemComponent ─┐           │    │
+│  │  │                      │  │                      │          │    │
+│  │  │ ├─[✓] Reports    ⋮   │  │ ├─[✓] Q1_report  ⋮   │          │    │
+│  │  └──────────────────────┘  └──────────────────────┘          │    │
+│  │                                                             │    │
+│  │  State Management:                                          │    │
+│  │  - Selection tracking                                       │    │
+│  │  - Expansion state                                          │    │
+│  │  - Parent-child relationships                               │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+│                                                                     │
+│                                                                     │
+│  Data Flow:                                                         │
+│  1. Input tree data → TreeExplorerComponent                         │
+│  2. TreeExplorerComponent flattens and manages state                │
+│  3. TreeItemComponent instances render individual nodes             │
+│  4. User interaction → Events emitted back to parent                │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
 
 The Tree Explorer consists of two main components working together to provide a seamless user experience:
 
@@ -44,6 +110,28 @@ The individual node component that:
 ## Selection State Propagation
 
 The Tree Explorer implements intelligent selection state propagation:
+
+```
+┌─ Selection States Propagation ─────────────────────────────────────┐
+│                                                                    │
+│  1. Child → Parent Propagation:                                    │
+│                                                                    │
+│     ┌─[▤] Parent                   ┌─[✓] Parent                    │
+│     │                              │                               │
+│     ├─[✓] Child 1       →          ├─[✓] Child 1                   │
+│     └─[ ] Child 2                  └─[✓] Child 2                   │
+│        (Some selected)                (All selected)               │
+│                                                                    │
+│  2. Parent → Children Propagation:                                 │
+│                                                                    │
+│     ┌─[ ] Parent                   ┌─[✓] Parent                    │
+│     │                              │                               │
+│     ├─[ ] Child 1       →          ├─[✓] Child 1                   │
+│     └─[ ] Child 2                  └─[✓] Child 2                   │
+│      (Click parent)                   (All children selected)      │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+```
 
 1. **Child → Parent**: When children are selected or deselected, parent nodes update their state:
    - All children selected → Parent becomes fully selected
@@ -141,6 +229,22 @@ export enum SelectionState {
 ### NodeType
 
 Available node types with corresponding icons:
+
+```
+┌─ Node Types and Icons ────────────────────────────────────────────┐
+│                                                                   │
+│  📁 FOLDER      - folder icon for directories                     │
+│  📄 FILE        - generic file icon                               │
+│  📝 DOCUMENT    - document icon for text files                    │
+│  🖼️  IMAGE       - image icon for pictures                         │
+│  ⚙️  CONFIG      - gear icon for configuration files               │
+│  🚀 EXECUTABLE  - launch icon for executables                     │
+│  🗃️  ARCHIVE     - archive icon for compressed files               │
+│  🎬 VIDEO       - video icon for media files                      │
+│  🎵 AUDIO       - audio icon for sound files                      │
+│                                                                   │
+└───────────────────────────────────────────────────────────────────┘
+```
 
 ```typescript
 export enum NodeType {

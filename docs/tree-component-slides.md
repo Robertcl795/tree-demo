@@ -15,7 +15,17 @@ A reusable Angular component for displaying hierarchical data with:
 
 ## Key Features
 
-![Demo Screenshot](https://via.placeholder.com/300x200?text=Demo)
+```
+┌─ Tree Explorer ─────────────┐
+│                             │
+│  ┌─[✓] Documents    ⋮       │
+│  ├─[▤] Media        ⋮       │
+│  │  ├─[✓] Images    ⋮       │
+│  │  └─[ ] Videos    ⋮       │
+│  └─[ ] Config       ⋮       │
+│                             │
+└─────────────────────────────┘
+```
 
 - **Three Selection States**: Selected, Unselected, Partial
 - **Selection Propagation**: Parent → Children, Children → Parent  
@@ -26,7 +36,15 @@ A reusable Angular component for displaying hierarchical data with:
 
 ## Selection States
 
-![Selection States](https://via.placeholder.com/500x250?text=Selection+States)
+```
+┌─ Selection States ──────────────┐
+│                                 │
+│  [✓] Full Selection (all)       │
+│  [▤] Partial Selection (some)   │
+│  [ ] No Selection (none)        │
+│                                 │
+└─────────────────────────────────┘
+```
 
 - **Full Selection**: All child items selected
 - **Partial Selection**: Some child items selected
@@ -37,8 +55,18 @@ A reusable Angular component for displaying hierarchical data with:
 ## Component Structure
 
 ```
-TreeExplorerComponent (container)
-└── TreeItemComponent (for each node)
+┌─ Component Structure ─────────┐
+│                               │
+│  TreeExplorerComponent        │
+│  ┌───────────────────────┐    │
+│  │                       │    │
+│  │  TreeItemComponent    │    │
+│  │  TreeItemComponent    │    │
+│  │  TreeItemComponent    │    │
+│  │                       │    │
+│  └───────────────────────┘    │
+│                               │
+└───────────────────────────────┘
 ```
 
 - **TreeExplorerComponent**: Manages tree data & selection state
