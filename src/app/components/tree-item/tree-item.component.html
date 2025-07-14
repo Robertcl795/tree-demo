@@ -1,10 +1,14 @@
 <div class="tree-item" [style.padding-left.px]="paddingLeft()">
   @if (isLoading()) {
+  <!-- Material Progress Bar -->
   <mat-progress-bar
     mode="indeterminate"
-    style="position: absolute; top: 0; left: 0; right: 0; height: 2px"
+    style="position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 1000;"
   >
   </mat-progress-bar>
+  
+  <!-- Fallback Custom Progress Bar for testing -->
+  <!-- <div class="custom-progress-bar"></div> -->
   }
 
   <div class="item-content" (click)="onRowClick($event)">

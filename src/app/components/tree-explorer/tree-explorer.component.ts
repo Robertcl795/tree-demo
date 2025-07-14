@@ -102,12 +102,12 @@ export class TreeExplorerComponent implements OnInit {
         loading.add(node.id);
         this.loadingNodes.set(loading);
         
-        // Remove loading state after a delay
+        // Remove loading state after a delay to show animation
         setTimeout(() => {
           const currentLoading = new Set(this.loadingNodes());
           currentLoading.delete(node.id);
           this.loadingNodes.set(currentLoading);
-        }, 500);
+        }, 1000); // Increased to 1 second to clearly see the animation
       }
     }
     

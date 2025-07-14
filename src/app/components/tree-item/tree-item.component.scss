@@ -64,3 +64,57 @@
     .checkbox-wrapper mat-checkbox.mat-mdc-checkbox-disabled {
       opacity: 0.6;
     }
+
+    // Ensure progress bar animations work properly
+    mat-progress-bar {
+      &.mat-progress-bar {
+        overflow: visible;
+      }
+      
+      ::ng-deep .mat-progress-bar-buffer {
+        background-color: transparent;
+      }
+      
+      ::ng-deep .mat-progress-bar-primary {
+        background-color: #1976d2;
+      }
+      
+      ::ng-deep .mat-progress-bar-fill::after {
+        background-color: #1976d2;
+      }
+    }
+
+    // Custom progress bar for testing animations
+    .custom-progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #e0e0e0;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .custom-progress-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, #1976d2, transparent);
+      animation: progressSlide 1.5s ease-in-out infinite;
+    }
+
+    @keyframes progressSlide {
+      0% {
+        left: -50%;
+      }
+      50% {
+        left: 100%;
+      }
+      100% {
+        left: -50%;
+      }
+    }

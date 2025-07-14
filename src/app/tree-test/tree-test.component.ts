@@ -11,8 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 
-import { TreeExplorerComponent } from '../components/tree-explorer/tree-explorer.component';
-import { TreeNode, TreeConfig, NodeType, SelectionState, MenuAction } from '../models/vault.model';
+import { TreeExplorerComponent } from '../tree-explorer';
+import { TreeNode, TreeConfig, NodeType, SelectionState, MenuAction } from '../tree-explorer';
 
 @Component({
   selector: 'app-tree-test',
@@ -139,14 +139,14 @@ import { TreeNode, TreeConfig, NodeType, SelectionState, MenuAction } from '../m
         </mat-card-header>
         
         <mat-card-content>
-          <app-tree-explorer
+          <tree-explorer
             [rootData]="treeData()"
             [config]="treeConfig()"
             [globalLoading]="isLoading()"
             (expand)="onNodeExpand($event)"
             (menuAction)="onMenuAction($event)"
             (selectionChange)="onSelectionChange($event)"
-          ></app-tree-explorer>
+          ></tree-explorer>
         </mat-card-content>
         
         <mat-card-footer>
@@ -540,17 +540,17 @@ export class TreeTestComponent implements OnInit {
     return false;
   }
   
-  onNodeExpand(nodeId: string) {
-    this.logEvent('expand', { nodeId });
+  onNodeExpand(event: { nodeId: string; node: TreeNode }) {
+    this.logEvent('expand', event);
   }
   
-  onMenuAction(action: MenuAction) {
-    this.logEvent('menuAction', action);
+  onMenuAction(event: { action: MenuAction; node: TreeNode }) {
+    this.logEvent('menuAction', event);
   }
   
-  onSelectionChange(selectedIds: string[]) {
-    this.selectedNodes.set(selectedIds);
-    this.logEvent('selectionChange', { count: selectedIds.length, ids: selectedIds });
+  onSelectionChange(event: { selectedIds: string[]; selectedNodes: TreeNode[] }) {
+    this.selectedNodes.set(event.selectedIds);
+    this.logEvent('selectionChange', { count: event.selectedIds.length, ids: event.selectedIds });
   }
   
   clearEventLog() {

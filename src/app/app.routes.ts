@@ -15,6 +15,10 @@ export const routes: Routes = [
     loadComponent: () => import('./tree-test/tree-test.component').then(m => m.TreeTestComponent)
   },
   {
+    path: 'demo',
+    loadComponent: () => import('./tree-demo/tree-demo.component').then(m => m.TreeDemoComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

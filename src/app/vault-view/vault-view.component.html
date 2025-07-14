@@ -14,13 +14,13 @@
         }
         
         @if (rootData().length > 0) {
-          <app-tree-explorer
+          <tree-explorer
             [rootData]="rootData()"
             [config]="explorerConfig"
             [globalLoading]="isLoading()"
             (expand)="onNodeExpand($event)"
             (menuAction)="onMenuAction($event)"
-          ></app-tree-explorer>
+          ></tree-explorer>
         }
       </mat-card-content>
     </mat-card>

@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { VaultService } from '../services/vault.service';
-import { TreeNode, TreeConfig, NodeType } from '../models/vault.model';
-import { TreeExplorerComponent } from '../components/tree-explorer/tree-explorer.component';
+import { TreeNode, TreeConfig, NodeType } from '../tree-explorer';
+import { TreeExplorerComponent } from '../tree-explorer';
 
 @Component({
   selector: 'app-vault-view',
@@ -81,13 +81,13 @@ export class VaultViewComponent implements OnInit{
     }
   }
 
-  async onNodeExpand(nodeId: string) {
+  async onNodeExpand(event: { nodeId: string; node: TreeNode }) {
     // Here you could implement lazy loading of children
-    console.log('Node expanded:', nodeId);
+    console.log('Node expanded:', event);
   }
 
-  onMenuAction(action: { nodeId: string; action: string }) {
-    console.log('Menu action:', action);
+  onMenuAction(event: { action: any; node: TreeNode }) {
+    console.log('Menu action:', event);
   }
 
   goBack() {
